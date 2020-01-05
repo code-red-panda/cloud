@@ -1,0 +1,95 @@
+version: '3' 
+
+services:
+
+  nginx:
+    image: jwilder/nginx-proxy:alpine
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    container_name: nginx
+    networks:
+      - nextcloud_network
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/nginx/conf.d:/etc/nginx/conf.d
+      - ./data/nginx/vhost.d:/etc/nginx/vhost.d
+      - ./data/nginx/html:/usr/share/nginx/html
+      - ./data/nginx/certs:/etc/nginx/certs
+      - /var/run/docker.sock:/tmp/docker.sock
+    restart: unless-stopped
+  
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion:v1.12
+    container_name: letsencrypt
+    depends_on:
+      - nginx
+    networks:
+      - nextcloud_network
+    volumes:
+      - ./data/nginx/certs:/etc/nginx/certs
+      - ./data/nginx/vhost.d:/etc/nginx/vhost.d
+      - ./data/nginx/html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  redis:
+    image: redis:5.0.6
+    container_name: redis
+    networks:
+      - nextcloud_network
+    restart: unless-stopped
+
+  percona:
+    image: percona:5.7.26
+    container_name: percona-server
+    networks:
+      - nextcloud_network
+    volumes:
+      - percona_datadir:/var/lib/mysql
+      - percona_cnf:/etc/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+    restart: unless-stopped
+  
+  nextcloud:
+    image: nextcloud:17.0.1
+    container_name: nextcloud
+    networks:
+      - nextcloud_network
+    depends_on:
+      - nginx
+      - letsencrypt
+      - redis
+      - percona
+    volumes:
+      - nextcloud:/var/www/html
+      - nextcloud_data:/var/www/html/data
+      - nextcloud_config:/var/www/html/config
+      - nextcloud_apps:/var/www/html/custom_apps
+      - nextcloud_themes:/var/www/html/themes
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - VIRTUAL_HOST=${DOMAIN}
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+    restart: unless-stopped
+
+volumes:
+  percona_datadir:
+  percona_cnf:
+  nextcloud:
+  nextcloud_data:
+  nextcloud_config:
+  nextcloud_apps:
+  nextcloud_themes:
+
+networks:
+  nextcloud_network:
