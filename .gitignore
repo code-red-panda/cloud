@@ -1,2 +1,3 @@
-data/nginx/*
+data/nginx/**
+data/wireguard/*.key
 .env
