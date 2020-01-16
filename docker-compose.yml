@@ -78,6 +78,7 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_HOST=${MYSQL_HOST}
       - VIRTUAL_HOST=${DOMAIN}
+      - REDIS_HOST=${REDIS_HOST}
       - LETSENCRYPT_HOST=${DOMAIN}
       - LETSENCRYPT_EMAIL=${EMAIL}
     restart: unless-stopped
