@@ -1,3 +1,6 @@
-data/nginx/**
+data/nginx/conf.d/default.conf
+data/nginx/certs/*
+data/nginx/html/*
+data/nginx/vhost.d/*
 data/wireguard/*.key
 .env
