@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
   
   letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion:v1.12
+    image: jrcs/letsencrypt-nginx-proxy-companion:${LETSENCRYPT_VERSION}
     container_name: letsencrypt
     depends_on:
       - nginx
@@ -35,14 +35,14 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:5.0.6
+    image: redis:${REDIS_VERSION}
     container_name: redis
     networks:
       - nextcloud_network
     restart: unless-stopped
 
   percona:
-    image: percona:5.7.26
+    image: percona:${PERCONA_VERSION}
     container_name: percona-server
     networks:
       - nextcloud_network
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
   
   nextcloud:
-    image: nextcloud:17.0.1
+    image: nextcloud:${NEXTCLOUD_VERSION}
     container_name: nextcloud
     networks:
       - nextcloud_network
