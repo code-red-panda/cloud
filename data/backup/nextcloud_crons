@@ -1,0 +1,4 @@
+MAILTO=you@domain.tld
+
+# Nextcloud backups, every 2 hours
+0 */2 * * * root . $HOME/.bash_profile ; flock -n /tmp/nextcloud_backup.lock sh /opt/cloud/data/backup/nextcloud_backup.sh >> /var/log/nextcloud/backup.log 2>&1
