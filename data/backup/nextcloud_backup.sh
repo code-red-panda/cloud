@@ -6,8 +6,8 @@ LOG_DIR="/var/log/nextcloud"
 DETAIL_LOG="$LOG_DIR/backup_details.log"
 TS=`date +%Y-%m-%d_%H-%M-UTC`
 BACKUP_DIR="/backups/$TS"
-TAR_SRC="/var/lib/docker/volumes/* /opt/cloud/nginx/*"
-TAR_TRG="$BACKUP_DIR/nextcloud_volumes_nginx_backup.tar.gz"
+TAR_SRC="/var/lib/docker/volumes/* /opt/cloud/data/* /opt/cloud/.env /root/.my.cnf"
+TAR_TRG="$BACKUP_DIR/nextcloud_backup.tar.gz"
 MYDUMPER_DIR="$BACKUP_DIR/mydumper"
 
 
@@ -71,7 +71,7 @@ tar czf $TAR_TRG $TAR_SRC >> $DETAIL_LOG 2>&1
 
 
 echo "`date "+%Y-%m-%d %H:%M:%S UTC"` INFO:: Taking Mydumper backup..."
-mydumper --outputdir=$MYDUMPER_DIR --threads=2 --chunk-filesize=5120 --build-empty-files  --compress --verbose=3 --trx-consistency-only >> $DETAIL_LOG 2>&1
+mydumper --outputdir=$MYDUMPER_DIR --regex='^((nextcloud\.|mysql\.user))' --threads=2 --chunk-filesize=5120 --build-empty-files  --compress --verbose=3 --trx-consistency-only >> $DETAIL_LOG 2>&1
   if test ! $? = 0
   then
       echo "`date "+%Y-%m-%d %H:%M:%S UTC"` ERROR:: Mydumper backup did not complete OK. Check the details log $DETAIL_LOG. Exiting and taking Nextcloud out of maintenance mode."
