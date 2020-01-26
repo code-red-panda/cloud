@@ -10,7 +10,7 @@ It also includes automated backups which can optionally be uploaded to an S3 buc
 
 Below is a summary of my set up in AWS, but further details are outside the scope of this guide...
 - A t3a.micro EC2 with Elastic IP assigned to it.
-- In Route53, a CNAME record (nextcloud.mydomain.com) pointing to the Elastic IP.
+- In Route53, a CNAME record (nextcloud.mydomain.com).
 - A second EBS volume attached and mounted to /var/lib/docker.
 - Security Groups and firewall configured to restrict access to only necessary ports.
 
