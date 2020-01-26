@@ -6,7 +6,7 @@ LOG_DIR="/var/log/nextcloud"
 DETAIL_LOG="$LOG_DIR/backup_details.log"
 TS=`date +%Y-%m-%d_%H-%M-UTC`
 BACKUP_DIR="/backups/$TS"
-TAR_SRC="/var/lib/docker/volumes/* /opt/cloud/data/* /opt/cloud/.env /root/.my.cnf"
+TAR_SRC="/var/lib/docker/volumes/* /opt/cloud/data/* /opt/cloud/.env /root/.my.cnf /etc/cron.d/nextcloud_crons --exclude /var/lib/docker/volumes/cloud_percona_datadir"
 TAR_TRG="$BACKUP_DIR/nextcloud_backup.tar.gz"
 MYDUMPER_DIR="$BACKUP_DIR/mydumper"
 
