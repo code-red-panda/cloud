@@ -1,4 +1,0 @@
-[client]
-user=root
-password=[MySQL root's password from .env]
-host=[docker percona-server IP]
