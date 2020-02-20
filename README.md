@@ -117,12 +117,17 @@ Wait 5 minutes for the SSL certificates, then visit: https://your.domain.tld
 You will be prompted to create an `admin` account.
 
 Further Nextcloud configuration and administration is outside the scope of this guide, but you can get started here:
-https://docs.nextcloud.com/server/17/admin_manual/
+https://docs.nextcloud.com/server/latest/admin_manual/
 
-https://docs.nextcloud.com/server/17/user_manual/
+https://docs.nextcloud.com/server/latest/user_manual/
 
 Nextcloud also offers desktop clients to sync files to your computer, as well as a phone app.
 https://nextcloud.com/clients/
+
+Security is on you as the administrator. You should read the Nextcloud hardening guidelines and also scan your site for vulnerabilities.
+https://docs.nextcloud.com/server/latest/admin_manual/installation/harden_server.html
+
+https://scan.nextcloud.com/
 
 ## Troubleshooting
 If you're having trouble, review the logs for all Docker services
