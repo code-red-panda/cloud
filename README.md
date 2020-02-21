@@ -178,8 +178,6 @@ sudo yum install -y https://github.com/maxbube/mydumper/releases/download/v0.9.5
 ```
 For Mydumper to connect to Percona Server, copy the `.my.cnf` to `root`'s homedir
 ```
-cd /opt/cloud
-
 sudo cp data/backup/dot-my.cnf /root/.my.cnf
 ```
 Get the Docker assigned IP of your Percona Server container for use in the next step
@@ -195,29 +193,30 @@ user=root
 password=[MySQL root's password from .env] <--- update
 host=[docker percona-server IP] <--- update
 ```
-Copy the backup cron into place
+Manually run a backup to make sure everything is OK.
 ```
-sudo cp data/backup/nextcloud_crons /etc/cron.d/
-```
-Now edit the cron's `MAILTO` with your email address
-```
-sudo vi /etc/cron.d/nextcloud_crons
-
-MAILTO=you@domain.tld
-...
-```
-That's it, now backups will automatically run every 2 hours. You can run one manually to make sure it completes OK.
-```
-sudo sh /opt/cloud/data/backup/nextcloud_backup.sh
+sudo sh data/backup/nextcloud_backup.sh
 2020-01-26 00:51:57 UTC INFO::>>>>>>>>>>>>>>>>>> BACKUP STATUS: [ START ]
 2020-01-26 00:51:57 UTC INFO:: Putting Nextcloud into maintenance mode...
 2020-01-26 00:51:58 UTC INFO:: Creating backup directory /backups/2020-01-26_00-51-UTC...
-2020-01-26 00:51:58 UTC INFO:: Tar'ing Docker volumes /var/lib/docker/volumes/* /opt/cloud/data/* /opt/cloud/.env /root/.my.cnf...
+2020-01-26 00:51:58 UTC INFO:: Tar'ing Docker volumes /var/lib/docker/volumes/* /opt/cloud/data/* /opt/cloud/.env /root/.my.cnf /etc/cron.d/nextcloud_crons --exclude /var/lib/docker/volumes/cloud_percona_datadir...
 2020-01-26 00:52:12 UTC INFO:: Taking Mydumper backup...
 2020-01-26 00:52:13 UTC INFO:: Taking Nextcloud out of maintenance mode...
 2020-01-26 00:52:13 UTC INFO::>>>>>>>>>>>>>>>>>> BACKUP STATUS: [ COMPLETED ]
 ```
-Once the backups run from cron, you will be able to review the logs here
+Inspect the backup in `/backups/`
+
+Copy the Nextcloud backup cron into place
+```
+sudo cp data/backup/nextcloud_crons /etc/cron.d/
+```
+Edit the cron's `MAILTO` with your email address
+```
+sudo vi /etc/cron.d/nextcloud_crons
+
+MAILTO=you@domain.tld
+```
+That's it, now backups will automatically run every 2 hours. Once the backups run from cron, you will be able to review the logs here:
 ```
 sudo less /var/log/nextcloud/backup.log
 ```
