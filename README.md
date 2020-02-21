@@ -1,18 +1,18 @@
 ## About
-This repository will install Nextcloud on a CentOS 7 VPS with Redis, Percona Server, Let's Encrypt SSL, and an Nginx reverse proxy. These services are all running as Docker containers managed by Docker Compose.
+Install Nextcloud on a CentOS 7 VPS with Redis, Percona Server, Let's Encrypt SSL, and Nginx reverse proxy. These services are all running as Docker containers managed by Docker Compose.
 
-It also includes automated backups which can optionally be uploaded to an S3 bucket.
+Set up automated backups which can optionally be uploaded to an S3 bucket.
 
 ## Pre-requisites and assumptions
 - A fresh install of CentOS 7 on a VPS.
 - The instance is provisioned with at least 2 CPUs and 1G of RAM.
-- You have a domain that is pointing to the instance.
+- You have pointed your Nextcloud CNAME to the instance.
 
 Below is a summary of my set up in AWS, but further details are outside the scope of this guide...
 - A t3a.micro EC2 with Elastic IP assigned to it.
-- In Route53, a CNAME record (nextcloud.mydomain.com).
-- A second EBS volume attached and mounted to /var/lib/docker.
-- Security Groups and firewall configured to restrict access to only necessary ports.
+- In Route53, a CNAME record (nextcloud.mydomain.com) ultimately pointing to the Elastic IP.
+- A second EBS volume attached with LVM volumes mounted to /var/lib/docker and /backups.
+- Security Groups and firewalld configured to restrict access to only necessary ports.
 
 ## Install Docker
 Install the EPEL repository and update the server
